@@ -1,28 +1,31 @@
 class Solution {
 public:
     vector<int> countBits(int num) {
-        vector<int> output;
-        output.push_back(0);
-        for(int i = 1; i<=num;i++){
-            output.push_back(parallel_bitcount(i));
+        int* binary = new int[32];
+        for(int i = 0;i<32;i++){
+            binary[i] = 0;
+            
         }
-        return output;
-    }
-    
-    int parallel_bitcount(int num){
-        bitset<32> bit_num = btoi(num);
-        bit_num = itob(btoi(bit_num)-btoi(((bit_num >> 1)&itob(0x55555555))));
-        bit_num = itob(btoi(bit_num & itob(0x33333333)) + btoi(bit_num >> 2 &itob(0x33333333)));
-        bit_num = itob(btoi(bit_num) + btoi(bit_num >> 4));
-        bit_num = bit_num & itob(0x0f0f0f0f);
-        bit_num = itob(btoi(bit_num) * 0x01010101)>>24;
+        int counter;
+        vector<int> result;
+        result.push_back(0);
+        int tmp = 0;
+        for(int i = 1;i<=num;i++){
+            counter = 0;
+            while(true){
+                if(binary[counter]==0){
+                    binary[counter] += 1;
+                    tmp += 1;
+                    break;
+                }else{
+                    binary[counter] = 0;
+                    tmp -= 1;
+                    counter += 1;
+                }
+            }
+            result.push_back(tmp);
+        }
+        return result;
         
-        return btoi(bit_num);
-    }
-    bitset<32> itob(int num){
-        return bitset<32>(num);
-    }
-    unsigned long long int btoi(bitset<32> bit_num){
-        return (int)(bit_num.to_ulong());
     }
 };
